@@ -1,9 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import accessibilityData from './data/accessibilities.json'
-import servicesData from './data/services.json'
+//import accessibilityData from './data/accessibilities.json'
+//import servicesData from './data/services.json'
+
+interface Accessibility {
+  "name": string,
+}
+interface Service {
+  "name": string,
+}
+
 
 const HotelInfo = () => {
+  const [accessibilityData, setAccessibilityData] = useState([] as Accessibility[]);
+  const [servicesData, setServicesData] = useState([] as Service[]);
+
+  const loadAccessibilityData = async() => {
+    // Query the API Gateway
+    const resp = await fetch('https://2wymgld4d3.execute-api.us-east-1.amazonaws.com/Production/accessibilities');
+    let jsonData = await resp.json();
+
+    // Assign response data to our state variable
+    setAccessibilityData(jsonData);
+  }
+
+  const loadServicesData = async() => {
+    // Query the API Gateway
+    const resp = await fetch('https://2wymgld4d3.execute-api.us-east-1.amazonaws.com/Production/services');
+    let jsonData = await resp.json();
+
+    // Assign response data to our state variable
+    setServicesData(jsonData);
+  }
+
+  useEffect(() => {
+    // Load the accessibility data from the API Gateway
+    loadAccessibilityData();
+
+    // Load the services data from the API Gateway
+    loadServicesData();
+  }, []);
+  
     return (     <div className="scene" id="hotelinfo">
       <article className="heading">
         <h1>Essential Info</h1>
